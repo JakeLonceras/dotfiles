@@ -297,7 +297,13 @@ require("lazy").setup({
     'hrsh7th/nvim-cmp',
   },
   {
-    'L3MON4D3/LuaSnip'
+    "rafamadriz/friendly-snippets"
+  },
+  {
+    'L3MON4D3/LuaSnip',
+    config = function()
+      require("luasnip.loaders.from_vscode").lazy_load()
+    end
   },
   {
     'saadparwaiz1/cmp_luasnip'
@@ -451,5 +457,5 @@ require("lazy").setup({
     config = function()
       require('nvim-ts-autotag').setup()
     end
-  }
+  },
 })
