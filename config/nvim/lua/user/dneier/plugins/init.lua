@@ -217,10 +217,20 @@ require("lazy").setup({
     end
   },
   {
+    'themaxmarchuk/tailwindcss-colors.nvim',
+  },
+  {
     'neovim/nvim-lspconfig',
     config = function()
+      local on_attach = function(client, bufnr)
+        if client.name == 'tailwindcss' then
+          require("tailwindcss-colors").buf_attach(bufnr)
+        end
+      end
+
       local lsp_config = require('lspconfig')
       lsp_config.lua_ls.setup({
+        on_attach = on_attach,
         settings = {
           Lua = {
             runtime = {
@@ -245,6 +255,7 @@ require("lazy").setup({
       })
 
       lsp_config.tsserver.setup({
+        on_attach = on_attach,
         cmd = { 'typescript-language-server', '--stdio' },
         filetypes = {
           'javascript',
@@ -259,6 +270,7 @@ require("lazy").setup({
       local capabilities = vim.lsp.protocol.make_client_capabilities()
       capabilities.textDocument.completion.completionItem.snippetSupport = true
       lsp_config.html.setup({
+        on_attach = on_attach,
         capabilities = capabilities,
         cmd = { "vscode-html-language-server", "--stdio" },
         filetypes = { "html" },
@@ -274,6 +286,7 @@ require("lazy").setup({
 
       local util = require "lspconfig".util
       lsp_config.cssls.setup({
+        on_attach = on_attach,
         capabilities = capabilities,
         cmd = { "vscode-css-language-server", "--stdio" },
         filetypes = { "css", "scss" },
@@ -295,6 +308,7 @@ require("lazy").setup({
       })
 
       lsp_config.tailwindcss.setup({
+        on_attach = on_attach,
         capabilities = capabilities,
         cmd = { "tailwindcss-language-server", "--stdio" },
         filetypes = { "aspnetcorerazor", "astro", "astro-markdown", "blade", "clojure", "django-html", "htmldjango",
@@ -395,6 +409,14 @@ require("lazy").setup({
   {
     'saadparwaiz1/cmp_luasnip'
   },
+  -- {
+  --   'roobert/tailwindcss-colorizer-cmp.nvim',
+  --   config = function()
+  --     require("tailwindcss-colorizer-cmp").setup({
+  --       color_square_width = 2,
+  --     })
+  --   end
+  -- },
   {
     'hrsh7th/nvim-cmp',
     config = function()
@@ -460,45 +482,48 @@ require("lazy").setup({
 
       local kind_icons = {
         Text = "",
-        Method = "󰆧",
-        Function = "󰊕",
+        Method = "",
+        Function = "",
         Constructor = "",
-        Field = "󰇽",
-        Variable = "󰂡",
-        Class = "󰠱",
+        Field = "",
+        Variable = "",
+        Class = "ﴯ",
         Interface = "",
         Module = "",
-        Property = "󰜢",
+        Property = "ﰠ",
         Unit = "",
         Value = "󰎠",
         Enum = "",
         Keyword = "󰌋",
         Snippet = "",
-        Color = "󰏘",
-        File = "󰈙",
+        Color = "",
+        File = "",
         Reference = "",
-        Folder = "󰉋",
+        Folder = "",
         EnumMember = "",
-        Constant = "󰏿",
+        Constant = "",
         Struct = "",
         Event = "",
-        Operator = "󰆕",
-        TypeParameter = "󰅲",
+        Operator = "",
+        TypeParameter = "",
       }
 
       cmp.setup {
         formatting = {
-          format = function(entry, vim_item)
+          -- fields = { "kind", "abbr", "menu" }, -- order of columns
+          -- format = require("tailwindcss-colorizer-cmp").formatter,
+          format = function(entry, item)
             -- Kind icons
-            vim_item.kind = string.format('%s %s', kind_icons[vim_item.kind], vim_item.kind) -- This concatonates the icons with the name of the item kind
+            item.kind = string.format('%s %s', kind_icons[item.kind], item.kind) -- This concatonates the icons with the name of the item kind
+
             -- Source
-            vim_item.menu = ({
+            item.menu = ({
               buffer = "[Buffer]",
               nvim_lsp = "[LSP]",
               luasnip = "[LuaSnip]",
               nvim_lua = "[Lua]",
             })[entry.source.name]
-            return vim_item
+            return item
           end
         },
       }
@@ -572,5 +597,11 @@ require("lazy").setup({
       -- If you would rather not use these then
       require('git-conflict').setup()
     end
-  }
+  },
+  {
+    'norcalli/nvim-colorizer.lua',
+    config = function()
+      require 'colorizer'.setup()
+    end
+  },
 })
