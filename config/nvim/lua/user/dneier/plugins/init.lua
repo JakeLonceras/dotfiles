@@ -260,7 +260,7 @@ require("lazy").setup({
       capabilities.textDocument.completion.completionItem.snippetSupport = true
       lsp_config.html.setup({
         capabilities = capabilities,
-        cmd = { "vscode-html-language-server.cmd", "--stdio" },
+        cmd = { "vscode-html-language-server", "--stdio" },
         filetypes = { "html" },
         init_options = {
           configurationSection = { "html", "css", "javascript" },
@@ -275,7 +275,7 @@ require("lazy").setup({
       local util = require "lspconfig".util
       lsp_config.cssls.setup({
         capabilities = capabilities,
-        cmd = { "vscode-css-language-server.cmd", "--stdio" },
+        cmd = { "vscode-css-language-server", "--stdio" },
         filetypes = { "css", "scss" },
         init_options = {
           providerFormatter = true,
@@ -289,6 +289,41 @@ require("lazy").setup({
             validate = true
           },
           scss = {
+            validate = true
+          }
+        }
+      })
+
+      lsp_config.tailwindcss.setup({
+        capabilities = capabilities,
+        cmd = { "tailwindcss-language-server", "--stdio" },
+        filetypes = { "aspnetcorerazor", "astro", "astro-markdown", "blade", "clojure", "django-html", "htmldjango",
+          "edge", "eelixir", "elixir", "ejs", "erb", "eruby", "gohtml", "gohtmltmpl", "haml", "handlebars", "hbs",
+          "html", "html-eex", "heex", "jade", "leaf", "liquid", "markdown", "mdx", "mustache", "njk", "nunjucks", "php",
+          "razor", "slim", "twig", "css", "less", "postcss", "sass", "scss", "stylus", "sugarss", "javascript",
+          "javascriptreact", "reason", "rescript", "typescript", "typescriptreact", "vue", "svelte" },
+        init_options = {
+          userLanguages = {
+            eelixir = "html-eex",
+            eruby = "erb"
+          }
+        },
+        root_dir = util.root_pattern('tailwind.config.js', 'tailwind.config.cjs', 'tailwind.config.mjs',
+          'tailwind.config.ts', 'postcss.config.js', 'postcss.config.cjs', 'postcss.config.mjs', 'postcss.config.ts',
+          'package.json', 'node_modules', '.git'
+        ),
+        settings = {
+          tailwindCSS = {
+            classAttributes = { "class", "className", "class:list", "classList", "ngClass" },
+            lint = {
+              cssConflict = "warning",
+              invalidApply = "error",
+              invalidConfigPath = "error",
+              invalidScreen = "error",
+              invalidTailwindDirective = "error",
+              invalidVariant = "error",
+              recommendedVariantOrder = "warning"
+            },
             validate = true
           }
         }
@@ -484,6 +519,10 @@ require("lazy").setup({
       }
 
       require('lspconfig')['cssls'].setup {
+        capabilities = capabilities
+      }
+
+      require('lspconfig')['tailwindcss'].setup {
         capabilities = capabilities
       }
     end
