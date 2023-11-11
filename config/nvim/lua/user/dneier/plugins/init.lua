@@ -1,7 +1,3 @@
--- set termguicolors to enable highlight groups
-vim.opt.termguicolors = true
-vim.g.mapleader = ' '
-
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
 if not vim.loop.fs_stat(lazypath) then
   vim.fn.system({
