@@ -256,7 +256,10 @@ require("lazy").setup({
         },
       })
 
+      local capabilities = vim.lsp.protocol.make_client_capabilities()
+      capabilities.textDocument.completion.completionItem.snippetSupport = true
       lsp_config.html.setup({
+        capabilities = capabilities,
         cmd = { "vscode-html-language-server.cmd", "--stdio" },
         filetypes = { "html" },
         init_options = {
@@ -267,6 +270,28 @@ require("lazy").setup({
           },
           providerFormatter = true,
         },
+      })
+
+      local util = require "lspconfig".util
+      lsp_config.cssls.setup({
+        capabilities = capabilities,
+        cmd = { "vscode-css-language-server.cmd", "--stdio" },
+        filetypes = { "css", "scss" },
+        init_options = {
+          providerFormatter = true,
+        },
+        root_dir = util.root_pattern(
+          "package.json",
+          ".git"
+        ),
+        settings = {
+          css = {
+            validate = true
+          },
+          scss = {
+            validate = true
+          }
+        }
       })
 
       -- Global mappings.
@@ -455,6 +480,10 @@ require("lazy").setup({
       }
 
       require('lspconfig')['html'].setup {
+        capabilities = capabilities
+      }
+
+      require('lspconfig')['cssls'].setup {
         capabilities = capabilities
       }
     end
