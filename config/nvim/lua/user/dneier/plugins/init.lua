@@ -139,12 +139,18 @@ require("lazy").setup({
     end
   },
   {
+    'JoosepAlviste/nvim-ts-context-commentstring',
+    config = function()
+      require('ts_context_commentstring').setup {}
+    end
+  },
+  {
     "nvim-treesitter/nvim-treesitter",
     config = function()
       vim.defer_fn(function()
         require 'nvim-treesitter.configs'.setup {
           -- A list of parser names, or "all" (the five listed parsers should always be installed)
-          -- ensure_installed = { "c", "lua", "vim", "vimdoc", "query" },
+          -- ensure_installed = { "lua", "tsx" },
 
           -- Install parsers synchronously (only applied to `ensure_installed`)
           sync_install = false,
@@ -182,8 +188,20 @@ require("lazy").setup({
             -- Instead of true it can also be a list of languages
             additional_vim_regex_highlighting = false,
           },
-        }
+          context_commentstring = {
+            enable = true,
+            enable_autocmd = false,
+          },
+        };
       end, 0)
+    end,
+  },
+  {
+    'numToStr/Comment.nvim',
+    config = function()
+      require('Comment').setup {
+        pre_hook = require('ts_context_commentstring.integrations.comment_nvim').create_pre_hook(),
+      }
     end
   },
   {
@@ -434,12 +452,6 @@ require("lazy").setup({
         },
         scope = { enabled = false },
       }
-    end
-  },
-  {
-    'numToStr/Comment.nvim',
-    config = function()
-      require('Comment').setup()
     end
   },
   {
