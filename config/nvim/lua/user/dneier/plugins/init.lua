@@ -466,4 +466,7 @@ require("lazy").setup({
       require('nvim-ts-autotag').setup()
     end
   },
+  {
+    "tpope/vim-fugitive"
+  }
 })
