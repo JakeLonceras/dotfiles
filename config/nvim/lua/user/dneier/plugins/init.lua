@@ -1,7 +1,3 @@
--- set termguicolors to enable highlight groups
-vim.opt.termguicolors = true
-vim.g.mapleader = ' '
-
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
 if not vim.loop.fs_stat(lazypath) then
   vim.fn.system({
@@ -143,12 +139,18 @@ require("lazy").setup({
     end
   },
   {
+    'JoosepAlviste/nvim-ts-context-commentstring',
+    config = function()
+      require('ts_context_commentstring').setup {}
+    end
+  },
+  {
     "nvim-treesitter/nvim-treesitter",
     config = function()
       vim.defer_fn(function()
         require 'nvim-treesitter.configs'.setup {
           -- A list of parser names, or "all" (the five listed parsers should always be installed)
-          -- ensure_installed = { "c", "lua", "vim", "vimdoc", "query" },
+          ensure_installed = { "lua", "tsx", "html", 'javascript' },
 
           -- Install parsers synchronously (only applied to `ensure_installed`)
           sync_install = false,
@@ -186,8 +188,20 @@ require("lazy").setup({
             -- Instead of true it can also be a list of languages
             additional_vim_regex_highlighting = false,
           },
-        }
+          context_commentstring = {
+            enable = true,
+            enable_autocmd = false,
+          },
+        };
       end, 0)
+    end,
+  },
+  {
+    'numToStr/Comment.nvim',
+    config = function()
+      require('Comment').setup {
+        pre_hook = require('ts_context_commentstring.integrations.comment_nvim').create_pre_hook(),
+      }
     end
   },
   {
@@ -203,10 +217,20 @@ require("lazy").setup({
     end
   },
   {
+    'themaxmarchuk/tailwindcss-colors.nvim',
+  },
+  {
     'neovim/nvim-lspconfig',
     config = function()
+      local on_attach = function(client, bufnr)
+        if client.name == 'tailwindcss' then
+          require("tailwindcss-colors").buf_attach(bufnr)
+        end
+      end
+
       local lsp_config = require('lspconfig')
       lsp_config.lua_ls.setup({
+        on_attach = on_attach,
         settings = {
           Lua = {
             runtime = {
@@ -231,6 +255,7 @@ require("lazy").setup({
       })
 
       lsp_config.tsserver.setup({
+        on_attach = on_attach,
         cmd = { 'typescript-language-server', '--stdio' },
         filetypes = {
           'javascript',
@@ -240,6 +265,82 @@ require("lazy").setup({
           'typescriptreact',
           'typescript.tsx',
         },
+      })
+
+      local capabilities = vim.lsp.protocol.make_client_capabilities()
+      capabilities.textDocument.completion.completionItem.snippetSupport = true
+      lsp_config.html.setup({
+        on_attach = on_attach,
+        capabilities = capabilities,
+        cmd = { "vscode-html-language-server", "--stdio" },
+        filetypes = { "html" },
+        init_options = {
+          configurationSection = { "html", "css", "javascript" },
+          embeddedLanguages = {
+            css = true,
+            javascript = true,
+          },
+          providerFormatter = true,
+        },
+      })
+
+      local util = require "lspconfig".util
+      lsp_config.cssls.setup({
+        on_attach = on_attach,
+        capabilities = capabilities,
+        cmd = { "vscode-css-language-server", "--stdio" },
+        filetypes = { "css", "scss" },
+        init_options = {
+          providerFormatter = true,
+        },
+        root_dir = util.root_pattern(
+          "package.json",
+          ".git"
+        ),
+        settings = {
+          css = {
+            validate = true
+          },
+          scss = {
+            validate = true
+          }
+        }
+      })
+
+      lsp_config.tailwindcss.setup({
+        on_attach = on_attach,
+        capabilities = capabilities,
+        cmd = { "tailwindcss-language-server", "--stdio" },
+        filetypes = { "aspnetcorerazor", "astro", "astro-markdown", "blade", "clojure", "django-html", "htmldjango",
+          "edge", "eelixir", "elixir", "ejs", "erb", "eruby", "gohtml", "gohtmltmpl", "haml", "handlebars", "hbs",
+          "html", "html-eex", "heex", "jade", "leaf", "liquid", "markdown", "mdx", "mustache", "njk", "nunjucks", "php",
+          "razor", "slim", "twig", "css", "less", "postcss", "sass", "scss", "stylus", "sugarss", "javascript",
+          "javascriptreact", "reason", "rescript", "typescript", "typescriptreact", "vue", "svelte" },
+        init_options = {
+          userLanguages = {
+            eelixir = "html-eex",
+            eruby = "erb"
+          }
+        },
+        root_dir = util.root_pattern('tailwind.config.js', 'tailwind.config.cjs', 'tailwind.config.mjs',
+          'tailwind.config.ts', 'postcss.config.js', 'postcss.config.cjs', 'postcss.config.mjs', 'postcss.config.ts',
+          'package.json', 'node_modules', '.git'
+        ),
+        settings = {
+          tailwindCSS = {
+            classAttributes = { "class", "className", "class:list", "classList", "ngClass" },
+            lint = {
+              cssConflict = "warning",
+              invalidApply = "error",
+              invalidConfigPath = "error",
+              invalidScreen = "error",
+              invalidTailwindDirective = "error",
+              invalidVariant = "error",
+              recommendedVariantOrder = "warning"
+            },
+            validate = true
+          }
+        }
       })
 
       -- Global mappings.
@@ -297,11 +398,25 @@ require("lazy").setup({
     'hrsh7th/nvim-cmp',
   },
   {
-    'L3MON4D3/LuaSnip'
+    "rafamadriz/friendly-snippets"
+  },
+  {
+    'L3MON4D3/LuaSnip',
+    config = function()
+      require("luasnip.loaders.from_vscode").lazy_load()
+    end
   },
   {
     'saadparwaiz1/cmp_luasnip'
   },
+  -- {
+  --   'roobert/tailwindcss-colorizer-cmp.nvim',
+  --   config = function()
+  --     require("tailwindcss-colorizer-cmp").setup({
+  --       color_square_width = 2,
+  --     })
+  --   end
+  -- },
   {
     'hrsh7th/nvim-cmp',
     config = function()
@@ -367,45 +482,48 @@ require("lazy").setup({
 
       local kind_icons = {
         Text = "",
-        Method = "󰆧",
-        Function = "󰊕",
+        Method = "",
+        Function = "",
         Constructor = "",
-        Field = "󰇽",
-        Variable = "󰂡",
-        Class = "󰠱",
+        Field = "",
+        Variable = "",
+        Class = "ﴯ",
         Interface = "",
         Module = "",
-        Property = "󰜢",
+        Property = "ﰠ",
         Unit = "",
         Value = "󰎠",
         Enum = "",
         Keyword = "󰌋",
         Snippet = "",
-        Color = "󰏘",
-        File = "󰈙",
+        Color = "",
+        File = "",
         Reference = "",
-        Folder = "󰉋",
+        Folder = "",
         EnumMember = "",
-        Constant = "󰏿",
+        Constant = "",
         Struct = "",
         Event = "",
-        Operator = "󰆕",
-        TypeParameter = "󰅲",
+        Operator = "",
+        TypeParameter = "",
       }
 
       cmp.setup {
         formatting = {
-          format = function(entry, vim_item)
+          -- fields = { "kind", "abbr", "menu" }, -- order of columns
+          -- format = require("tailwindcss-colorizer-cmp").formatter,
+          format = function(entry, item)
             -- Kind icons
-            vim_item.kind = string.format('%s %s', kind_icons[vim_item.kind], vim_item.kind) -- This concatonates the icons with the name of the item kind
+            item.kind = string.format('%s %s', kind_icons[item.kind], item.kind) -- This concatonates the icons with the name of the item kind
+
             -- Source
-            vim_item.menu = ({
+            item.menu = ({
               buffer = "[Buffer]",
               nvim_lsp = "[LSP]",
               luasnip = "[LuaSnip]",
               nvim_lua = "[Lua]",
             })[entry.source.name]
-            return vim_item
+            return item
           end
         },
       }
@@ -418,6 +536,18 @@ require("lazy").setup({
       }
 
       require('lspconfig')['tsserver'].setup {
+        capabilities = capabilities
+      }
+
+      require('lspconfig')['html'].setup {
+        capabilities = capabilities
+      }
+
+      require('lspconfig')['cssls'].setup {
+        capabilities = capabilities
+      }
+
+      require('lspconfig')['tailwindcss'].setup {
         capabilities = capabilities
       }
     end
@@ -435,9 +565,43 @@ require("lazy").setup({
     end
   },
   {
-    'numToStr/Comment.nvim',
+    'windwp/nvim-autopairs',
     config = function()
-      require('Comment').setup()
+      require("nvim-autopairs").setup {}
+    end
+  },
+  {
+    'windwp/nvim-ts-autotag',
+    config = function()
+      require('nvim-ts-autotag').setup()
+    end
+  },
+  {
+    "tpope/vim-fugitive"
+  },
+  {
+    'lewis6991/gitsigns.nvim',
+    config = function()
+      require('gitsigns').setup()
+    end
+  },
+  {
+    'akinsho/git-conflict.nvim',
+    config = function()
+      -- co — choose ours
+      -- ct — choose theirs
+      -- cb — choose both
+      -- c0 — choose none
+      -- ]x — move to previous conflict
+      -- [x — move to next conflict
+      -- If you would rather not use these then
+      require('git-conflict').setup()
+    end
+  },
+  {
+    'norcalli/nvim-colorizer.lua',
+    config = function()
+      require 'colorizer'.setup()
     end
   },
 })
