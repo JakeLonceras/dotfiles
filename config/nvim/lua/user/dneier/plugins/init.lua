@@ -150,7 +150,7 @@ require("lazy").setup({
       vim.defer_fn(function()
         require 'nvim-treesitter.configs'.setup {
           -- A list of parser names, or "all" (the five listed parsers should always be installed)
-          -- ensure_installed = { "lua", "tsx" },
+          ensure_installed = { "lua", "tsx", "html", 'javascript' },
 
           -- Install parsers synchronously (only applied to `ensure_installed`)
           sync_install = false,
@@ -253,6 +253,19 @@ require("lazy").setup({
           'typescript',
           'typescriptreact',
           'typescript.tsx',
+        },
+      })
+
+      lsp_config.html.setup({
+        cmd = { "vscode-html-language-server.cmd", "--stdio" },
+        filetypes = { "html" },
+        init_options = {
+          configurationSection = { "html", "css", "javascript" },
+          embeddedLanguages = {
+            css = true,
+            javascript = true,
+          },
+          providerFormatter = true,
         },
       })
 
@@ -438,6 +451,10 @@ require("lazy").setup({
       }
 
       require('lspconfig')['tsserver'].setup {
+        capabilities = capabilities
+      }
+
+      require('lspconfig')['html'].setup {
         capabilities = capabilities
       }
     end
