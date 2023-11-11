@@ -474,5 +474,18 @@ require("lazy").setup({
     config = function()
       require('gitsigns').setup()
     end
+  },
+  {
+    'akinsho/git-conflict.nvim',
+    config = function()
+      -- co — choose ours
+      -- ct — choose theirs
+      -- cb — choose both
+      -- c0 — choose none
+      -- ]x — move to previous conflict
+      -- [x — move to next conflict
+      -- If you would rather not use these then
+      require('git-conflict').setup()
+    end
   }
 })
