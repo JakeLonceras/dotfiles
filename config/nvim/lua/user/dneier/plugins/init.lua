@@ -1,22 +1,22 @@
-local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
+local lazypath = vim.fn.stdpath 'data' .. '/lazy/lazy.nvim'
 if not vim.loop.fs_stat(lazypath) then
-  vim.fn.system({
-    "git",
-    "clone",
-    "--filter=blob:none",
-    "https://github.com/folke/lazy.nvim.git",
-    "--branch=stable", -- latest stable release
+  vim.fn.system {
+    'git',
+    'clone',
+    '--filter=blob:none',
+    'https://github.com/folke/lazy.nvim.git',
+    '--branch=stable', -- latest stable release
     lazypath,
-  })
+  }
 end
 vim.opt.rtp:prepend(lazypath)
 
-require("lazy").setup({
+require('lazy').setup {
   {
     'folke/neodev.nvim',
     config = function()
-      require("neodev").setup()
-    end
+      require('neodev').setup()
+    end,
   },
   {
     'nvim-lua/plenary.nvim',
@@ -30,21 +30,21 @@ require("lazy").setup({
   {
     'nvim-telescope/telescope.nvim',
     config = function()
-      local builtin = require('telescope.builtin')
+      local builtin = require 'telescope.builtin'
 
       vim.keymap.set('n', '<leader>ff', builtin.find_files, {})
       vim.keymap.set('n', '<leader>fg', builtin.live_grep, {})
       vim.keymap.set('n', '<leader>fb', builtin.buffers, {})
       vim.keymap.set('n', '<leader>fh', builtin.help_tags, {})
 
-      require("telescope").load_extension('harpoon')
-    end
+      require('telescope').load_extension 'harpoon'
+    end,
   },
   {
-    'WhoIsSethDaniel/lualine-lsp-progress.nvim'
+    'WhoIsSethDaniel/lualine-lsp-progress.nvim',
   },
   {
-    "nvim-lualine/lualine.nvim",
+    'nvim-lualine/lualine.nvim',
     config = function()
       require('lualine').setup {
         options = {
@@ -63,7 +63,7 @@ require("lazy").setup({
             statusline = 1000,
             tabline = 1000,
             winbar = 1000,
-          }
+          },
         },
         sections = {
           lualine_a = { 'mode' },
@@ -71,7 +71,7 @@ require("lazy").setup({
           lualine_c = { 'filename', 'lsp_progress' },
           lualine_x = { 'encoding', 'fileformat', 'filetype' },
           lualine_y = { 'progress' },
-          lualine_z = { 'location' }
+          lualine_z = { 'location' },
         },
         inactive_sections = {
           lualine_a = {},
@@ -79,44 +79,62 @@ require("lazy").setup({
           lualine_c = { 'filename' },
           lualine_x = { 'location' },
           lualine_y = {},
-          lualine_z = {}
+          lualine_z = {},
         },
         tabline = {},
         winbar = {},
         inactive_winbar = {},
-        extensions = {}
+        extensions = {},
       }
-    end
+    end,
   },
   {
-    "neanias/everforest-nvim",
+    'neanias/everforest-nvim',
     config = function()
-      require("everforest").setup({
-        background = "hard",
-      })
-      vim.cmd([[colorscheme everforest]])
-    end
+      require('everforest').setup {
+        background = 'hard',
+      }
+      vim.cmd [[colorscheme everforest]]
+    end,
   },
   {
-    "xiyaowong/transparent.nvim",
+    'xiyaowong/transparent.nvim',
     config = function()
-      require("transparent").setup({ -- Optional, you don't have to run setup.
-        groups = {                   -- table: default groups
-          'Normal', 'NormalNC', 'Comment', 'Constant', 'Special', 'Identifier',
-          'Statement', 'PreProc', 'Type', 'Underlined', 'Todo', 'String', 'Function',
-          'Conditional', 'Repeat', 'Operator', 'Structure', 'LineNr', 'NonText',
-          'SignColumn', 'CursorLineNr', 'EndOfBuffer',
+      require('transparent').setup { -- Optional, you don't have to run setup.
+        groups = { -- table: default groups
+          'Normal',
+          'NormalNC',
+          'Comment',
+          'Constant',
+          'Special',
+          'Identifier',
+          'Statement',
+          'PreProc',
+          'Type',
+          'Underlined',
+          'Todo',
+          'String',
+          'Function',
+          'Conditional',
+          'Repeat',
+          'Operator',
+          'Structure',
+          'LineNr',
+          'NonText',
+          'SignColumn',
+          'CursorLineNr',
+          'EndOfBuffer',
         },
         extra_groups = { 'NvimTreeNormal', 'NvimTreeEndOfBuffer' }, -- table: additional groups that should be cleared
-        exclude_groups = {},                                        -- table: groups you don't want to clear
-      })
-    end
+        exclude_groups = {}, -- table: groups you don't want to clear
+      }
+    end,
   },
   {
-    "nvim-tree/nvim-tree.lua",
+    'nvim-tree/nvim-tree.lua',
     config = function()
-      require("nvim-tree").setup({
-        sort_by = "case_sensitive",
+      require('nvim-tree').setup {
+        sort_by = 'case_sensitive',
         view = {
           width = 30,
         },
@@ -127,7 +145,7 @@ require("lazy").setup({
         filters = {
           dotfiles = true,
         },
-      })
+      }
 
       local keymap = require('user.dneier.utils').keymap
       keymap(
@@ -136,21 +154,21 @@ require("lazy").setup({
         ':NvimTreeToggle<CR>',
         { desc = 'Toggling file explorer' }
       )
-    end
+    end,
   },
   {
     'JoosepAlviste/nvim-ts-context-commentstring',
     config = function()
       require('ts_context_commentstring').setup {}
-    end
+    end,
   },
   {
-    "nvim-treesitter/nvim-treesitter",
+    'nvim-treesitter/nvim-treesitter',
     config = function()
       vim.defer_fn(function()
-        require 'nvim-treesitter.configs'.setup {
+        require('nvim-treesitter.configs').setup {
           -- A list of parser names, or "all" (the five listed parsers should always be installed)
-          ensure_installed = { "lua", "tsx", "html", 'javascript' },
+          ensure_installed = { 'lua', 'tsx', 'html', 'javascript' },
 
           -- Install parsers synchronously (only applied to `ensure_installed`)
           sync_install = false,
@@ -176,7 +194,8 @@ require("lazy").setup({
             -- Or use a function for more flexibility, e.g. to disable slow treesitter highlight for large files
             disable = function(lang, buf)
               local max_filesize = 100 * 1024 -- 100 KB
-              local ok, stats = pcall(vim.loop.fs_stat, vim.api.nvim_buf_get_name(buf))
+              local ok, stats =
+                pcall(vim.loop.fs_stat, vim.api.nvim_buf_get_name(buf))
               if ok and stats and stats.size > max_filesize then
                 return true
               end
@@ -192,7 +211,7 @@ require("lazy").setup({
             enable = true,
             enable_autocmd = false,
           },
-        };
+        }
       end, 0)
     end,
   },
@@ -200,149 +219,34 @@ require("lazy").setup({
     'numToStr/Comment.nvim',
     config = function()
       require('Comment').setup {
-        pre_hook = require('ts_context_commentstring.integrations.comment_nvim').create_pre_hook(),
+        pre_hook = require(
+          'ts_context_commentstring.integrations.comment_nvim'
+        ).create_pre_hook(),
       }
-    end
+    end,
   },
   {
     'williamboman/mason.nvim',
     config = function()
-      require("mason").setup()
-    end
+      require('mason').setup()
+    end,
   },
   {
     'williamboman/mason-lspconfig.nvim',
     config = function()
-      require("mason-lspconfig").setup()
-    end
+      require('mason-lspconfig').setup()
+    end,
   },
   {
     'themaxmarchuk/tailwindcss-colors.nvim',
   },
   {
+    'creativenull/efmls-configs-nvim',
+  },
+  {
     'neovim/nvim-lspconfig',
+    priority = 1,
     config = function()
-      local on_attach = function(client, bufnr)
-        if client.name == 'tailwindcss' then
-          require("tailwindcss-colors").buf_attach(bufnr)
-        end
-      end
-
-      local lsp_config = require('lspconfig')
-      lsp_config.lua_ls.setup({
-        on_attach = on_attach,
-        settings = {
-          Lua = {
-            runtime = {
-              -- Tell the language server which version of Lua you're using (most likely LuaJIT in the case of Neovim)
-              version = 'LuaJIT',
-            },
-            diagnostics = {
-              -- Get the language server to recognize the `vim` global
-              globals = { 'vim' },
-            },
-            workspace = {
-              -- Make the server aware of Neovim runtime files
-              library = vim.api.nvim_get_runtime_file('', true),
-              checkThirdParty = false,
-            },
-            -- Do not send telemetry data containing a randomized but unique identifier
-            telemetry = {
-              enable = false,
-            },
-          },
-        },
-      })
-
-      lsp_config.tsserver.setup({
-        on_attach = on_attach,
-        cmd = { 'typescript-language-server', '--stdio' },
-        filetypes = {
-          'javascript',
-          'javascriptreact',
-          'javascript.jsx',
-          'typescript',
-          'typescriptreact',
-          'typescript.tsx',
-        },
-      })
-
-      local capabilities = vim.lsp.protocol.make_client_capabilities()
-      capabilities.textDocument.completion.completionItem.snippetSupport = true
-      lsp_config.html.setup({
-        on_attach = on_attach,
-        capabilities = capabilities,
-        cmd = { "vscode-html-language-server", "--stdio" },
-        filetypes = { "html" },
-        init_options = {
-          configurationSection = { "html", "css", "javascript" },
-          embeddedLanguages = {
-            css = true,
-            javascript = true,
-          },
-          providerFormatter = true,
-        },
-      })
-
-      local util = require "lspconfig".util
-      lsp_config.cssls.setup({
-        on_attach = on_attach,
-        capabilities = capabilities,
-        cmd = { "vscode-css-language-server", "--stdio" },
-        filetypes = { "css", "scss" },
-        init_options = {
-          providerFormatter = true,
-        },
-        root_dir = util.root_pattern(
-          "package.json",
-          ".git"
-        ),
-        settings = {
-          css = {
-            validate = true
-          },
-          scss = {
-            validate = true
-          }
-        }
-      })
-
-      lsp_config.tailwindcss.setup({
-        on_attach = on_attach,
-        capabilities = capabilities,
-        cmd = { "tailwindcss-language-server", "--stdio" },
-        filetypes = { "aspnetcorerazor", "astro", "astro-markdown", "blade", "clojure", "django-html", "htmldjango",
-          "edge", "eelixir", "elixir", "ejs", "erb", "eruby", "gohtml", "gohtmltmpl", "haml", "handlebars", "hbs",
-          "html", "html-eex", "heex", "jade", "leaf", "liquid", "markdown", "mdx", "mustache", "njk", "nunjucks", "php",
-          "razor", "slim", "twig", "css", "less", "postcss", "sass", "scss", "stylus", "sugarss", "javascript",
-          "javascriptreact", "reason", "rescript", "typescript", "typescriptreact", "vue", "svelte" },
-        init_options = {
-          userLanguages = {
-            eelixir = "html-eex",
-            eruby = "erb"
-          }
-        },
-        root_dir = util.root_pattern('tailwind.config.js', 'tailwind.config.cjs', 'tailwind.config.mjs',
-          'tailwind.config.ts', 'postcss.config.js', 'postcss.config.cjs', 'postcss.config.mjs', 'postcss.config.ts',
-          'package.json', 'node_modules', '.git'
-        ),
-        settings = {
-          tailwindCSS = {
-            classAttributes = { "class", "className", "class:list", "classList", "ngClass" },
-            lint = {
-              cssConflict = "warning",
-              invalidApply = "error",
-              invalidConfigPath = "error",
-              invalidScreen = "error",
-              invalidTailwindDirective = "error",
-              invalidVariant = "error",
-              recommendedVariantOrder = "warning"
-            },
-            validate = true
-          }
-        }
-      })
-
       -- Global mappings.
       -- See `:help vim.diagnostic.*` for documentation on any of the below functions
       vim.keymap.set('n', '<space>e', vim.diagnostic.open_float)
@@ -366,21 +270,36 @@ require("lazy").setup({
           vim.keymap.set('n', 'K', vim.lsp.buf.hover, opts)
           vim.keymap.set('n', 'gi', vim.lsp.buf.implementation, opts)
           vim.keymap.set('n', '<C-k>', vim.lsp.buf.signature_help, opts)
-          vim.keymap.set('n', '<space>wa', vim.lsp.buf.add_workspace_folder, opts)
-          vim.keymap.set('n', '<space>wr', vim.lsp.buf.remove_workspace_folder, opts)
+          vim.keymap.set(
+            'n',
+            '<space>wa',
+            vim.lsp.buf.add_workspace_folder,
+            opts
+          )
+          vim.keymap.set(
+            'n',
+            '<space>wr',
+            vim.lsp.buf.remove_workspace_folder,
+            opts
+          )
           vim.keymap.set('n', '<space>wl', function()
             print(vim.inspect(vim.lsp.buf.list_workspace_folders()))
           end, opts)
           vim.keymap.set('n', '<space>D', vim.lsp.buf.type_definition, opts)
           vim.keymap.set('n', '<space>rn', vim.lsp.buf.rename, opts)
-          vim.keymap.set({ 'n', 'v' }, '<space>ca', vim.lsp.buf.code_action, opts)
+          vim.keymap.set(
+            { 'n', 'v' },
+            '<space>ca',
+            vim.lsp.buf.code_action,
+            opts
+          )
           vim.keymap.set('n', 'gr', vim.lsp.buf.references, opts)
           vim.keymap.set('n', '<space>f', function()
             vim.lsp.buf.format { async = true }
           end, opts)
         end,
       })
-    end
+    end,
   },
   {
     'hrsh7th/cmp-nvim-lsp',
@@ -398,16 +317,16 @@ require("lazy").setup({
     'hrsh7th/nvim-cmp',
   },
   {
-    "rafamadriz/friendly-snippets"
+    'rafamadriz/friendly-snippets',
   },
   {
     'L3MON4D3/LuaSnip',
     config = function()
-      require("luasnip.loaders.from_vscode").lazy_load()
-    end
+      require('luasnip.loaders.from_vscode').lazy_load()
+    end,
   },
   {
-    'saadparwaiz1/cmp_luasnip'
+    'saadparwaiz1/cmp_luasnip',
   },
   -- {
   --   'roobert/tailwindcss-colorizer-cmp.nvim',
@@ -421,7 +340,7 @@ require("lazy").setup({
     'hrsh7th/nvim-cmp',
     config = function()
       local cmp = require 'cmp'
-      cmp.setup({
+      cmp.setup {
         snippet = {
           -- REQUIRED - you must specify a snippet engine
           expand = function(args)
@@ -435,13 +354,13 @@ require("lazy").setup({
           -- completion = cmp.config.window.bordered(),
           -- documentation = cmp.config.window.bordered(),
         },
-        mapping = cmp.mapping.preset.insert({
+        mapping = cmp.mapping.preset.insert {
           ['<C-b>'] = cmp.mapping.scroll_docs(-4),
           ['<C-f>'] = cmp.mapping.scroll_docs(4),
           ['<C-Space>'] = cmp.mapping.complete(),
           ['<C-e>'] = cmp.mapping.abort(),
-          ['<CR>'] = cmp.mapping.confirm({ select = true }), -- Accept currently selected item. Set `select` to `false` to only confirm explicitly selected items.
-        }),
+          ['<CR>'] = cmp.mapping.confirm { select = true }, -- Accept currently selected item. Set `select` to `false` to only confirm explicitly selected items.
+        },
         sources = cmp.config.sources({
           { name = 'nvim_lsp' },
           -- { name = 'vsnip' }, -- For vsnip users.
@@ -450,8 +369,8 @@ require("lazy").setup({
           -- { name = 'snippy' }, -- For snippy users.
         }, {
           { name = 'buffer' },
-        })
-      })
+        }),
+      }
 
       -- Set configuration for specific filetype.
       cmp.setup.filetype('gitcommit', {
@@ -459,53 +378,53 @@ require("lazy").setup({
           { name = 'git' }, -- You can specify the `git` source if [you were installed it](https://github.com/petertriho/cmp-git).
         }, {
           { name = 'buffer' },
-        })
+        }),
       })
 
       -- Use buffer source for `/` and `?` (if you enabled `native_menu`, this won't work anymore).
       cmp.setup.cmdline({ '/', '?' }, {
         mapping = cmp.mapping.preset.cmdline(),
         sources = {
-          { name = 'buffer' }
-        }
+          { name = 'buffer' },
+        },
       })
 
       -- Use cmdline & path source for ':' (if you enabled `native_menu`, this won't work anymore).
       cmp.setup.cmdline(':', {
         mapping = cmp.mapping.preset.cmdline(),
         sources = cmp.config.sources({
-          { name = 'path' }
+          { name = 'path' },
         }, {
-          { name = 'cmdline' }
-        })
+          { name = 'cmdline' },
+        }),
       })
 
       local kind_icons = {
-        Text = "",
-        Method = "",
-        Function = "",
-        Constructor = "",
-        Field = "",
-        Variable = "",
-        Class = "ﴯ",
-        Interface = "",
-        Module = "",
-        Property = "ﰠ",
-        Unit = "",
-        Value = "󰎠",
-        Enum = "",
-        Keyword = "󰌋",
-        Snippet = "",
-        Color = "",
-        File = "",
-        Reference = "",
-        Folder = "",
-        EnumMember = "",
-        Constant = "",
-        Struct = "",
-        Event = "",
-        Operator = "",
-        TypeParameter = "",
+        Text = '',
+        Method = '',
+        Function = '',
+        Constructor = '',
+        Field = '',
+        Variable = '',
+        Class = 'ﴯ',
+        Interface = '',
+        Module = '',
+        Property = 'ﰠ',
+        Unit = '',
+        Value = '󰎠',
+        Enum = '',
+        Keyword = '󰌋',
+        Snippet = '',
+        Color = '',
+        File = '',
+        Reference = '',
+        Folder = '',
+        EnumMember = '',
+        Constant = '',
+        Struct = '',
+        Event = '',
+        Operator = '',
+        TypeParameter = '',
       }
 
       cmp.setup {
@@ -518,72 +437,264 @@ require("lazy").setup({
 
             -- Source
             item.menu = ({
-              buffer = "[Buffer]",
-              nvim_lsp = "[LSP]",
-              luasnip = "[LuaSnip]",
-              nvim_lua = "[Lua]",
+              buffer = '[Buffer]',
+              nvim_lsp = '[LSP]',
+              luasnip = '[LuaSnip]',
+              nvim_lua = '[Lua]',
             })[entry.source.name]
             return item
-          end
+          end,
         },
       }
 
       -- Set up lspconfig.
       local capabilities = require('cmp_nvim_lsp').default_capabilities()
+
       -- Replace <YOUR_LSP_SERVER> with each lsp server you've enabled.
-      require('lspconfig')['lua_ls'].setup {
-        capabilities = capabilities
+
+      local lsp_config = require 'lspconfig'
+      local on_attach = function(client, bufnr)
+        if client.name == 'tailwindcss' then
+          require('tailwindcss-colors').buf_attach(bufnr)
+        end
+      end
+
+      lsp_config.lua_ls.setup {
+        on_attach = on_attach,
+        capabilities = capabilities,
+        settings = {
+          Lua = {
+            runtime = {
+              -- Tell the language server which version of Lua you're using (most likely LuaJIT in the case of Neovim)
+              version = 'LuaJIT',
+            },
+            diagnostics = {
+              -- Get the language server to recognize the `vim` global
+              globals = { 'vim' },
+            },
+            workspace = {
+              -- Make the server aware of Neovim runtime files
+              library = vim.api.nvim_get_runtime_file('', true),
+              checkThirdParty = false,
+            },
+            -- Do not send telemetry data containing a randomized but unique identifier
+            telemetry = {
+              enable = false,
+            },
+          },
+        },
       }
 
-      require('lspconfig')['tsserver'].setup {
-        capabilities = capabilities
+      lsp_config.tsserver.setup {
+        on_attach = on_attach,
+        capabilities = capabilities,
+        cmd = { 'typescript-language-server', '--stdio' },
+        filetypes = {
+          'javascript',
+          'javascriptreact',
+          'javascript.jsx',
+          'typescript',
+          'typescriptreact',
+          'typescript.tsx',
+        },
       }
 
-      require('lspconfig')['html'].setup {
-        capabilities = capabilities
+      -- Default completion builtin in lsp, using cmp instead
+      -- local capabilities = vim.lsp.protocol.make_client_capabilities()
+      -- capabilities.textDocument.completion.completionItem.snippetSupport = true
+      lsp_config.html.setup {
+        on_attach = on_attach,
+        capabilities = capabilities,
+        cmd = { 'vscode-html-language-server', '--stdio' },
+        filetypes = { 'html' },
+        init_options = {
+          configurationSection = { 'html', 'css', 'javascript' },
+          embeddedLanguages = {
+            css = true,
+            javascript = true,
+          },
+          providerFormatter = true,
+        },
       }
 
-      require('lspconfig')['cssls'].setup {
-        capabilities = capabilities
+      local util = require('lspconfig').util
+      lsp_config.cssls.setup {
+        on_attach = on_attach,
+        capabilities = capabilities,
+        cmd = { 'vscode-css-language-server', '--stdio' },
+        filetypes = { 'css', 'scss' },
+        init_options = {
+          providerFormatter = true,
+        },
+        root_dir = util.root_pattern('package.json', '.git'),
+        settings = {
+          css = {
+            validate = true,
+          },
+          scss = {
+            validate = true,
+          },
+        },
       }
 
-      require('lspconfig')['tailwindcss'].setup {
-        capabilities = capabilities
+      lsp_config.tailwindcss.setup {
+        on_attach = on_attach,
+        capabilities = capabilities,
+        cmd = { 'tailwindcss-language-server', '--stdio' },
+        filetypes = {
+          'aspnetcorerazor',
+          'astro',
+          'astro-markdown',
+          'blade',
+          'clojure',
+          'django-html',
+          'htmldjango',
+          'edge',
+          'eelixir',
+          'elixir',
+          'ejs',
+          'erb',
+          'eruby',
+          'gohtml',
+          'gohtmltmpl',
+          'haml',
+          'handlebars',
+          'hbs',
+          'html',
+          'html-eex',
+          'heex',
+          'jade',
+          'leaf',
+          'liquid',
+          'markdown',
+          'mdx',
+          'mustache',
+          'njk',
+          'nunjucks',
+          'php',
+          'razor',
+          'slim',
+          'twig',
+          'css',
+          'less',
+          'postcss',
+          'sass',
+          'scss',
+          'stylus',
+          'sugarss',
+          'javascript',
+          'javascriptreact',
+          'reason',
+          'rescript',
+          'typescript',
+          'typescriptreact',
+          'vue',
+          'svelte',
+        },
+        init_options = {
+          userLanguages = {
+            eelixir = 'html-eex',
+            eruby = 'erb',
+          },
+        },
+        root_dir = util.root_pattern(
+          'tailwind.config.js',
+          'tailwind.config.cjs',
+          'tailwind.config.mjs',
+          'tailwind.config.ts',
+          'postcss.config.js',
+          'postcss.config.cjs',
+          'postcss.config.mjs',
+          'postcss.config.ts',
+          'package.json',
+          'node_modules',
+          '.git'
+        ),
+        settings = {
+          tailwindCSS = {
+            classAttributes = {
+              'class',
+              'className',
+              'class:list',
+              'classList',
+              'ngClass',
+            },
+            lint = {
+              cssConflict = 'warning',
+              invalidApply = 'error',
+              invalidConfigPath = 'error',
+              invalidScreen = 'error',
+              invalidTailwindDirective = 'error',
+              invalidVariant = 'error',
+              recommendedVariantOrder = 'warning',
+            },
+            validate = true,
+          },
+        },
       }
-    end
+
+      local stylua = require 'efmls-configs.formatters.stylua'
+      local luacheck = require 'efmls-configs.linters.luacheck'
+      local languages = {
+        lua = { stylua, luacheck },
+      }
+
+      local efmls_config = {
+        filetypes = vim.tbl_keys(languages),
+        settings = {
+          rootMarkers = { '.git/' },
+          languages = languages,
+        },
+        init_options = {
+          documentFormatting = true,
+          documentRangeFormatting = true,
+        },
+      }
+
+      require('lspconfig').efm.setup(vim.tbl_extend('force', efmls_config, {
+        -- Pass your custom lsp config below like on_attach and capabilities
+        --
+        -- on_attach = on_attach,
+        capabilities = capabilities,
+      }))
+
+      -- require('lspconfig')['efm'].setup {
+      --   capabilities = capabilities
+      -- }
+    end,
   },
   {
     'lukas-reineke/indent-blankline.nvim',
     config = function()
-      require("ibl").setup {
+      require('ibl').setup {
         indent = { char = '│' },
         whitespace = {
           remove_blankline_trail = false,
         },
         scope = { enabled = false },
       }
-    end
+    end,
   },
   {
     'windwp/nvim-autopairs',
     config = function()
-      require("nvim-autopairs").setup {}
-    end
+      require('nvim-autopairs').setup {}
+    end,
   },
   {
     'windwp/nvim-ts-autotag',
     config = function()
       require('nvim-ts-autotag').setup()
-    end
+    end,
   },
   {
-    "tpope/vim-fugitive"
+    'tpope/vim-fugitive',
   },
   {
     'lewis6991/gitsigns.nvim',
     config = function()
       require('gitsigns').setup()
-    end
+    end,
   },
   {
     'akinsho/git-conflict.nvim',
@@ -596,12 +707,13 @@ require("lazy").setup({
       -- [x — move to next conflict
       -- If you would rather not use these then
       require('git-conflict').setup()
-    end
+    end,
   },
   {
     'norcalli/nvim-colorizer.lua',
     config = function()
-      require 'colorizer'.setup()
-    end
+      require('colorizer').setup()
+    end,
   },
-})
+}
+
