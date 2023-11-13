@@ -178,7 +178,7 @@ require('lazy').setup {
           auto_install = false,
 
           -- List of parsers to ignore installing (or "all")
-          -- ignore_install = { "javascript" },
+          ignore_install = {},
 
           ---- If you need to change the installation directory of the parsers (see -> Advanced Setup)
           -- parser_install_dir = "/some/path/to/store/parsers", -- Remember to run vim.opt.runtimepath:append("/some/path/to/store/parsers")!
@@ -714,6 +714,15 @@ require('lazy').setup {
     config = function()
       require('colorizer').setup()
     end,
+  },
+  {
+    'iamcco/markdown-preview.nvim',
+    cmd = { 'MarkdownPreviewToggle', 'MarkdownPreview', 'MarkdownPreviewStop' },
+    ft = { 'markdown' },
+    build = function()
+      vim.fn['mkdp#util#install']()
+    end,
+    config = function() end,
   },
 }
 
