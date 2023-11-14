@@ -101,7 +101,7 @@ require('lazy').setup {
     'xiyaowong/transparent.nvim',
     config = function()
       require('transparent').setup { -- Optional, you don't have to run setup.
-        groups = { -- table: default groups
+        groups = {                   -- table: default groups
           'Normal',
           'NormalNC',
           'Comment',
@@ -126,7 +126,7 @@ require('lazy').setup {
           'EndOfBuffer',
         },
         extra_groups = { 'NvimTreeNormal', 'NvimTreeEndOfBuffer' }, -- table: additional groups that should be cleared
-        exclude_groups = {}, -- table: groups you don't want to clear
+        exclude_groups = {},                                        -- table: groups you don't want to clear
       }
     end,
   },
@@ -195,7 +195,7 @@ require('lazy').setup {
             disable = function(lang, buf)
               local max_filesize = 100 * 1024 -- 100 KB
               local ok, stats =
-                pcall(vim.loop.fs_stat, vim.api.nvim_buf_get_name(buf))
+                  pcall(vim.loop.fs_stat, vim.api.nvim_buf_get_name(buf))
               if ok and stats and stats.size > max_filesize then
                 return true
               end
@@ -239,9 +239,6 @@ require('lazy').setup {
   },
   {
     'themaxmarchuk/tailwindcss-colors.nvim',
-  },
-  {
-    'creativenull/efmls-configs-nvim',
   },
   {
     'neovim/nvim-lspconfig',
@@ -633,34 +630,36 @@ require('lazy').setup {
         },
       }
 
-      local stylua = require 'efmls-configs.formatters.stylua'
-      local luacheck = require 'efmls-configs.linters.luacheck'
-      local languages = {
-        lua = { stylua, luacheck },
-      }
-
-      local efmls_config = {
-        filetypes = vim.tbl_keys(languages),
-        settings = {
-          rootMarkers = { '.git/' },
-          languages = languages,
-        },
+      lsp_config.efm.setup {
+        capabilities = capabilities,
         init_options = {
           documentFormatting = true,
           documentRangeFormatting = true,
+          hover = true,
+          documentSymbol = true,
+          codeAction = true,
+          completion = true,
         },
+        cmd = { 'efm-langserver' },
+        settings = {
+          rootMarkers = { '.git/' },
+          languages = {
+            lua = {
+              {
+                -- formatter
+                formatCommand = 'stylua --color Never ${--range-start:charStart} ${--range-end:charEnd} -',
+                formatCanRange = true,
+                formatStdin = true,
+                rootMarkers = {
+                  'stylua.toml',
+                  '.stylua.toml',
+                },
+              },
+            },
+          },
+        },
+        root_dir = util.root_pattern '.git',
       }
-
-      require('lspconfig').efm.setup(vim.tbl_extend('force', efmls_config, {
-        -- Pass your custom lsp config below like on_attach and capabilities
-        --
-        -- on_attach = on_attach,
-        capabilities = capabilities,
-      }))
-
-      -- require('lspconfig')['efm'].setup {
-      --   capabilities = capabilities
-      -- }
     end,
   },
   {
@@ -725,4 +724,3 @@ require('lazy').setup {
     config = function() end,
   },
 }
-
