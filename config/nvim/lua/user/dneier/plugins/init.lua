@@ -631,19 +631,25 @@ require('lazy').setup {
       }
 
       lsp_config.efm.setup {
-        capabilities = capabilities,
+        -- capabilities = capabilities,
         init_options = {
           documentFormatting = true,
-          documentRangeFormatting = true,
-          hover = true,
-          documentSymbol = true,
-          codeAction = true,
-          completion = true,
         },
         cmd = { 'efm-langserver' },
         settings = {
           rootMarkers = { '.git/' },
           languages = {
+            typescriptreact = {
+              {
+                lintCommand = "eslint_d -f visualstudio --stdin --stdin-filename ${INPUT}",
+                lintIgnoreExitCode = true,
+                lintStdin = true,
+                lintFormats = {
+                  "%f(%l,%c): %tarning %m",
+                  "%f(%l,%c): %rror %m"
+                }
+              }
+            },
             lua = {
               {
                 -- formatter
