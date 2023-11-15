@@ -9,8 +9,7 @@ My current dotfiles
 3. Run the snippet below accordingly.
 ```
 # Powershell
-Remove-Item "$env:LOCALAPPDATA\nvim" -Recurse
-Copy-Item -Path ".\config\nvim\" -Destination "$env:LOCALAPPDATA\nvim" -Recurse
+.\setup-nvim.ps1
 ```
 
 4. Install lua, tsx, html and javascript using TSInstall.
