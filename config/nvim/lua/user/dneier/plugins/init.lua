@@ -101,7 +101,7 @@ require('lazy').setup {
     'xiyaowong/transparent.nvim',
     config = function()
       require('transparent').setup { -- Optional, you don't have to run setup.
-        groups = {                   -- table: default groups
+        groups = { -- table: default groups
           'Normal',
           'NormalNC',
           'Comment',
@@ -126,7 +126,7 @@ require('lazy').setup {
           'EndOfBuffer',
         },
         extra_groups = { 'NvimTreeNormal', 'NvimTreeEndOfBuffer' }, -- table: additional groups that should be cleared
-        exclude_groups = {},                                        -- table: groups you don't want to clear
+        exclude_groups = {}, -- table: groups you don't want to clear
       }
     end,
   },
@@ -195,7 +195,7 @@ require('lazy').setup {
             disable = function(lang, buf)
               local max_filesize = 100 * 1024 -- 100 KB
               local ok, stats =
-                  pcall(vim.loop.fs_stat, vim.api.nvim_buf_get_name(buf))
+                pcall(vim.loop.fs_stat, vim.api.nvim_buf_get_name(buf))
               if ok and stats and stats.size > max_filesize then
                 return true
               end
@@ -457,7 +457,6 @@ require('lazy').setup {
       end
 
       lsp_config.lua_ls.setup {
-        on_attach = on_attach,
         capabilities = capabilities,
         settings = {
           Lua = {
@@ -483,7 +482,6 @@ require('lazy').setup {
       }
 
       lsp_config.tsserver.setup {
-        on_attach = on_attach,
         capabilities = capabilities,
         cmd = { 'typescript-language-server', '--stdio' },
         filetypes = {
@@ -500,7 +498,6 @@ require('lazy').setup {
       -- local capabilities = vim.lsp.protocol.make_client_capabilities()
       -- capabilities.textDocument.completion.completionItem.snippetSupport = true
       lsp_config.html.setup {
-        on_attach = on_attach,
         capabilities = capabilities,
         cmd = { 'vscode-html-language-server', '--stdio' },
         filetypes = { 'html' },
@@ -516,7 +513,6 @@ require('lazy').setup {
 
       local util = require('lspconfig').util
       lsp_config.cssls.setup {
-        on_attach = on_attach,
         capabilities = capabilities,
         cmd = { 'vscode-css-language-server', '--stdio' },
         filetypes = { 'css', 'scss' },
@@ -535,7 +531,6 @@ require('lazy').setup {
       }
 
       lsp_config.tailwindcss.setup {
-        on_attach = on_attach,
         capabilities = capabilities,
         cmd = { 'tailwindcss-language-server', '--stdio' },
         filetypes = {
@@ -631,9 +626,14 @@ require('lazy').setup {
       }
 
       lsp_config.efm.setup {
-        -- capabilities = capabilities,
+        capabilities = capabilities,
         init_options = {
           documentFormatting = true,
+          documentRangeFormatting = true,
+          hover = true,
+          documentSymbol = true,
+          codeAction = true,
+          completion = true,
         },
         cmd = { 'efm-langserver' },
         settings = {
@@ -641,14 +641,31 @@ require('lazy').setup {
           languages = {
             typescriptreact = {
               {
-                lintCommand = "eslint_d -f visualstudio --stdin --stdin-filename ${INPUT}",
+                lintCommand = 'eslint_d -f visualstudio --stdin --stdin-filename ${INPUT}',
                 lintIgnoreExitCode = true,
                 lintStdin = true,
                 lintFormats = {
-                  "%f(%l,%c): %tarning %m",
-                  "%f(%l,%c): %rror %m"
-                }
-              }
+                  '%f(%l,%c): %tarning %m',
+                  '%f(%l,%c): %rror %m',
+                },
+              },
+              {
+                -- formatter
+                formatCommand = 'prettierd ${INPUT} ${--range-start=charStart} ${--range-end=charEnd} ${--tab-width=tabSize} ${--use-tabs=!insertSpaces}',
+                formatCanRange = true,
+                formatStdin = true,
+                rootMarkers = {
+                  '.prettierrc',
+                  '.prettierrc.json',
+                  '.prettierrc.js',
+                  '.prettierrc.yml',
+                  '.prettierrc.yaml',
+                  '.prettierrc.json5',
+                  '.prettierrc.mjs',
+                  '.prettierrc.cjs',
+                  '.prettierrc.toml',
+                },
+              },
             },
             lua = {
               {
@@ -665,6 +682,7 @@ require('lazy').setup {
           },
         },
         root_dir = util.root_pattern '.git',
+        single_file_support = true,
       }
     end,
   },
@@ -730,3 +748,4 @@ require('lazy').setup {
     config = function() end,
   },
 }
+
