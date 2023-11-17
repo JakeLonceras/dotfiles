@@ -647,6 +647,7 @@ require('lazy').setup {
           languages = {
             typescriptreact = {
               {
+                prefix = "eslint_d",
                 lintCommand = 'eslint_d -f visualstudio --stdin --stdin-filename ${INPUT}',
                 lintIgnoreExitCode = true,
                 lintStdin = true,
@@ -657,6 +658,7 @@ require('lazy').setup {
               },
               {
                 -- formatter
+                prefix = "prettier_d",
                 formatCommand = 'prettierd ${INPUT} ${--range-start=charStart} ${--range-end=charEnd} ${--tab-width=tabSize} ${--use-tabs=!insertSpaces}',
                 formatCanRange = true,
                 formatStdin = true,
@@ -676,6 +678,7 @@ require('lazy').setup {
             lua = {
               {
                 -- formatter
+                prefix = "stylua",
                 formatCommand = 'stylua --color Never ${--range-start:charStart} ${--range-end:charEnd} -',
                 formatCanRange = true,
                 formatStdin = true,
