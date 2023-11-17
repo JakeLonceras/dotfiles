@@ -328,10 +328,10 @@ require('lazy').setup {
   {
     'roobert/tailwindcss-colorizer-cmp.nvim',
     config = function()
-      require("tailwindcss-colorizer-cmp").setup({
+      require('tailwindcss-colorizer-cmp').setup {
         color_square_width = 2,
-      })
-    end
+      }
+    end,
   },
   {
     'hrsh7th/nvim-cmp',
@@ -647,7 +647,7 @@ require('lazy').setup {
           languages = {
             typescriptreact = {
               {
-                prefix = "eslint_d",
+                prefix = 'eslint_d',
                 lintCommand = 'eslint_d -f visualstudio --stdin --stdin-filename ${INPUT}',
                 lintIgnoreExitCode = true,
                 lintStdin = true,
@@ -657,8 +657,8 @@ require('lazy').setup {
                 },
               },
               {
-                -- formatter
-                prefix = "prettier_d",
+                -- linter
+                prefix = 'prettier_d',
                 formatCommand = 'prettierd ${INPUT} ${--range-start=charStart} ${--range-end=charEnd} ${--tab-width=tabSize} ${--use-tabs=!insertSpaces}',
                 formatCanRange = true,
                 formatStdin = true,
@@ -678,13 +678,24 @@ require('lazy').setup {
             lua = {
               {
                 -- formatter
-                prefix = "stylua",
+                prefix = 'stylua',
                 formatCommand = 'stylua --color Never ${--range-start:charStart} ${--range-end:charEnd} -',
                 formatCanRange = true,
                 formatStdin = true,
                 rootMarkers = {
                   'stylua.toml',
                   '.stylua.toml',
+                },
+              },
+              {
+                -- linter
+                prefix = 'luacheck',
+                lintCommand = 'luacheck --codes --no-color --quiet -',
+                lintIgnoreExitCode = true,
+                lintStdin = true,
+                lintFormats = { '%.%#:%l:%c: (%t%n) %m' },
+                rootMarkers = {
+                  '.luacheckrc',
                 },
               },
             },
