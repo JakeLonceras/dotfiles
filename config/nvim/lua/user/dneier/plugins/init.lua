@@ -445,7 +445,9 @@ require('lazy').setup {
       }
 
       -- Set up lspconfig.
-      local capabilities = require('cmp_nvim_lsp').default_capabilities()
+      local capabilities = vim.lsp.protocol.make_client_capabilities()
+      capabilities.workspace.didChangeWatchedFiles.dynamicRegistration = false
+      capabilities = require('cmp_nvim_lsp').default_capabilities(capabilities)
 
       -- Replace <YOUR_LSP_SERVER> with each lsp server you've enabled.
 
@@ -630,6 +632,14 @@ require('lazy').setup {
         },
       }
 
+      lsp_config.clangd.setup {
+        on_attach = on_attach,
+        capabilities = capabilities,
+        cmd = { 'clangd' },
+        filetypes = { 'c', 'cpp', 'objc', 'objcpp', 'cuda', 'proto' },
+        single_file_support = true,
+      }
+
       lsp_config.efm.setup {
         on_attach = on_attach,
         capabilities = capabilities,
@@ -645,6 +655,30 @@ require('lazy').setup {
         settings = {
           rootMarkers = { '.git/' },
           languages = {
+            cpp = {
+              {
+                prefix = 'clang_tidy',
+                lintCommand = 'clang-tidy ${INPUT}',
+                lintStdin = false,
+                lintIgnoreExitCode = true,
+                lintFormats = {
+                  '%f:%l:%c: %trror: %m',
+                  '%f:%l:%c: %tarning: %m',
+                  '%f:%l:%c: %tote: %m',
+                },
+                rootMarkers = { '.clang-tidy' },
+              },
+              {
+                -- linter
+                prefix = 'clang_format',
+                formatCommand = 'clang-format ${INPUT}',
+                formatCanRange = false,
+                formatStdin = false,
+                rootMarkers = {
+                  '.clang-format',
+                },
+              },
+            },
             typescriptreact = {
               {
                 prefix = 'eslint_d',
@@ -768,4 +802,3 @@ require('lazy').setup {
     config = function() end,
   },
 }
-
