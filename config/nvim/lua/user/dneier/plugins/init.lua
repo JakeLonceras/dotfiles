@@ -679,6 +679,96 @@ require('lazy').setup {
                 },
               },
             },
+            javascriptreact = {
+              {
+                prefix = 'eslint_d',
+                lintCommand = 'eslint_d -f visualstudio --stdin --stdin-filename ${INPUT}',
+                lintIgnoreExitCode = true,
+                lintStdin = true,
+                lintFormats = {
+                  '%f(%l,%c): %tarning %m',
+                  '%f(%l,%c): %rror %m',
+                },
+              },
+              {
+                -- linter
+                prefix = 'prettier_d',
+                formatCommand = 'prettierd ${INPUT} ${--range-start=charStart} ${--range-end=charEnd} ${--tab-width=tabSize} ${--use-tabs=!insertSpaces}',
+                formatCanRange = true,
+                formatStdin = true,
+                rootMarkers = {
+                  '.prettierrc',
+                  '.prettierrc.json',
+                  '.prettierrc.js',
+                  '.prettierrc.yml',
+                  '.prettierrc.yaml',
+                  '.prettierrc.json5',
+                  '.prettierrc.mjs',
+                  '.prettierrc.cjs',
+                  '.prettierrc.toml',
+                },
+              },
+            },
+            javascript = {
+              {
+                prefix = 'eslint_d',
+                lintCommand = 'eslint_d -f visualstudio --stdin --stdin-filename ${INPUT}',
+                lintIgnoreExitCode = true,
+                lintStdin = true,
+                lintFormats = {
+                  '%f(%l,%c): %tarning %m',
+                  '%f(%l,%c): %rror %m',
+                },
+              },
+              {
+                -- linter
+                prefix = 'prettier_d',
+                formatCommand = 'prettierd ${INPUT} ${--range-start=charStart} ${--range-end=charEnd} ${--tab-width=tabSize} ${--use-tabs=!insertSpaces}',
+                formatCanRange = true,
+                formatStdin = true,
+                rootMarkers = {
+                  '.prettierrc',
+                  '.prettierrc.json',
+                  '.prettierrc.js',
+                  '.prettierrc.yml',
+                  '.prettierrc.yaml',
+                  '.prettierrc.json5',
+                  '.prettierrc.mjs',
+                  '.prettierrc.cjs',
+                  '.prettierrc.toml',
+                },
+              },
+            },
+            typescript = {
+              {
+                prefix = 'eslint_d',
+                lintCommand = 'eslint_d -f visualstudio --stdin --stdin-filename ${INPUT}',
+                lintIgnoreExitCode = true,
+                lintStdin = true,
+                lintFormats = {
+                  '%f(%l,%c): %tarning %m',
+                  '%f(%l,%c): %rror %m',
+                },
+              },
+              {
+                -- linter
+                prefix = 'prettier_d',
+                formatCommand = 'prettierd ${INPUT} ${--range-start=charStart} ${--range-end=charEnd} ${--tab-width=tabSize} ${--use-tabs=!insertSpaces}',
+                formatCanRange = true,
+                formatStdin = true,
+                rootMarkers = {
+                  '.prettierrc',
+                  '.prettierrc.json',
+                  '.prettierrc.js',
+                  '.prettierrc.yml',
+                  '.prettierrc.yaml',
+                  '.prettierrc.json5',
+                  '.prettierrc.mjs',
+                  '.prettierrc.cjs',
+                  '.prettierrc.toml',
+                },
+              },
+            },
             typescriptreact = {
               {
                 prefix = 'eslint_d',
