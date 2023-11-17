@@ -657,17 +657,17 @@ require('lazy').setup {
           languages = {
             cpp = {
               {
-                prefix = 'clang_tidy',
-                lintCommand = 'clang-tidy ${INPUT}',
-                lintStdin = false,
-                lintIgnoreExitCode = true,
-                lintFormats = {
-                  '%f:%l:%c: %trror: %m',
-                  '%f:%l:%c: %tarning: %m',
-                  '%f:%l:%c: %tote: %m',
-                },
-                rootMarkers = { '.clang-tidy' },
-              },
+              --   prefix = 'clang_tidy',
+              --   lintCommand = 'clang-tidy ${INPUT}',
+              --   lintStdin = false,
+              --   lintIgnoreExitCode = true,
+              --   lintFormats = {
+              --     '%f:%l:%c: %trror: %m',
+              --     '%f:%l:%c: %tarning: %m',
+              --     '%f:%l:%c: %tote: %m',
+              --   },
+              --   rootMarkers = { '.clang-tidy' },
+              -- },
               {
                 -- linter
                 prefix = 'clang_format',
