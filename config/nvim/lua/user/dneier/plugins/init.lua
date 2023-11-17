@@ -325,14 +325,14 @@ require('lazy').setup {
   {
     'saadparwaiz1/cmp_luasnip',
   },
-  -- {
-  --   'roobert/tailwindcss-colorizer-cmp.nvim',
-  --   config = function()
-  --     require("tailwindcss-colorizer-cmp").setup({
-  --       color_square_width = 2,
-  --     })
-  --   end
-  -- },
+  {
+    'roobert/tailwindcss-colorizer-cmp.nvim',
+    config = function()
+      require('tailwindcss-colorizer-cmp').setup {
+        color_square_width = 2,
+      }
+    end,
+  },
   {
     'hrsh7th/nvim-cmp',
     config = function()
@@ -457,6 +457,7 @@ require('lazy').setup {
       end
 
       lsp_config.lua_ls.setup {
+        on_attach = on_attach,
         capabilities = capabilities,
         settings = {
           Lua = {
@@ -482,6 +483,7 @@ require('lazy').setup {
       }
 
       lsp_config.tsserver.setup {
+        on_attach = on_attach,
         capabilities = capabilities,
         cmd = { 'typescript-language-server', '--stdio' },
         filetypes = {
@@ -498,6 +500,7 @@ require('lazy').setup {
       -- local capabilities = vim.lsp.protocol.make_client_capabilities()
       -- capabilities.textDocument.completion.completionItem.snippetSupport = true
       lsp_config.html.setup {
+        on_attach = on_attach,
         capabilities = capabilities,
         cmd = { 'vscode-html-language-server', '--stdio' },
         filetypes = { 'html' },
@@ -513,6 +516,7 @@ require('lazy').setup {
 
       local util = require('lspconfig').util
       lsp_config.cssls.setup {
+        on_attach = on_attach,
         capabilities = capabilities,
         cmd = { 'vscode-css-language-server', '--stdio' },
         filetypes = { 'css', 'scss' },
@@ -531,6 +535,7 @@ require('lazy').setup {
       }
 
       lsp_config.tailwindcss.setup {
+        on_attach = on_attach,
         capabilities = capabilities,
         cmd = { 'tailwindcss-language-server', '--stdio' },
         filetypes = {
@@ -626,6 +631,7 @@ require('lazy').setup {
       }
 
       lsp_config.efm.setup {
+        on_attach = on_attach,
         capabilities = capabilities,
         init_options = {
           documentFormatting = true,
@@ -641,6 +647,7 @@ require('lazy').setup {
           languages = {
             typescriptreact = {
               {
+                prefix = 'eslint_d',
                 lintCommand = 'eslint_d -f visualstudio --stdin --stdin-filename ${INPUT}',
                 lintIgnoreExitCode = true,
                 lintStdin = true,
@@ -650,7 +657,8 @@ require('lazy').setup {
                 },
               },
               {
-                -- formatter
+                -- linter
+                prefix = 'prettier_d',
                 formatCommand = 'prettierd ${INPUT} ${--range-start=charStart} ${--range-end=charEnd} ${--tab-width=tabSize} ${--use-tabs=!insertSpaces}',
                 formatCanRange = true,
                 formatStdin = true,
@@ -670,12 +678,24 @@ require('lazy').setup {
             lua = {
               {
                 -- formatter
+                prefix = 'stylua',
                 formatCommand = 'stylua --color Never ${--range-start:charStart} ${--range-end:charEnd} -',
                 formatCanRange = true,
                 formatStdin = true,
                 rootMarkers = {
                   'stylua.toml',
                   '.stylua.toml',
+                },
+              },
+              {
+                -- linter
+                prefix = 'luacheck',
+                lintCommand = 'luacheck --codes --no-color --quiet -',
+                lintIgnoreExitCode = true,
+                lintStdin = true,
+                lintFormats = { '%.%#:%l:%c: (%t%n) %m' },
+                rootMarkers = {
+                  '.luacheckrc',
                 },
               },
             },
