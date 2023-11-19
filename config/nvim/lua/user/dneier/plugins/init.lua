@@ -640,6 +640,22 @@ require('lazy').setup {
         single_file_support = true,
       }
 
+      lsp_config.pylyzer.setup {
+        on_attach = on_attach,
+        capabilities = capabilities,
+        cmd = { "pylyzer", "--server" },
+        filetypes = { 'python' },
+        single_file_support = true,
+        settings = {
+          python = {
+            checkOnType = false,
+            diagnostics = true,
+            inlayHints = true,
+            smartCompletion = true
+          }
+        }
+      }
+
       lsp_config.efm.setup {
         root_dir = util.root_pattern '.git',
         single_file_support = true,
