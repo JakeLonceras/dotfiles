@@ -828,6 +828,7 @@ require('lazy').setup {
         root_dir = util.root_pattern '.git',
         single_file_support = true,
       }
+    }
     end,
   },
   {
