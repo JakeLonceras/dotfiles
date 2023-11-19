@@ -101,7 +101,7 @@ require('lazy').setup {
     'xiyaowong/transparent.nvim',
     config = function()
       require('transparent').setup { -- Optional, you don't have to run setup.
-        groups = { -- table: default groups
+        groups = {                   -- table: default groups
           'Normal',
           'NormalNC',
           'Comment',
@@ -126,7 +126,7 @@ require('lazy').setup {
           'EndOfBuffer',
         },
         extra_groups = { 'NvimTreeNormal', 'NvimTreeEndOfBuffer' }, -- table: additional groups that should be cleared
-        exclude_groups = {}, -- table: groups you don't want to clear
+        exclude_groups = {},                                        -- table: groups you don't want to clear
       }
     end,
   },
@@ -195,7 +195,7 @@ require('lazy').setup {
             disable = function(lang, buf)
               local max_filesize = 100 * 1024 -- 100 KB
               local ok, stats =
-                pcall(vim.loop.fs_stat, vim.api.nvim_buf_get_name(buf))
+                  pcall(vim.loop.fs_stat, vim.api.nvim_buf_get_name(buf))
               if ok and stats and stats.size > max_filesize then
                 return true
               end
@@ -641,6 +641,8 @@ require('lazy').setup {
       }
 
       lsp_config.efm.setup {
+        root_dir = util.root_pattern '.git',
+        single_file_support = true,
         on_attach = on_attach,
         capabilities = capabilities,
         init_options = {
@@ -657,178 +659,180 @@ require('lazy').setup {
           languages = {
             cpp = {
               {
-              --   prefix = 'clang_tidy',
-              --   lintCommand = 'clang-tidy ${INPUT}',
-              --   lintStdin = false,
-              --   lintIgnoreExitCode = true,
-              --   lintFormats = {
-              --     '%f:%l:%c: %trror: %m',
-              --     '%f:%l:%c: %tarning: %m',
-              --     '%f:%l:%c: %tote: %m',
-              --   },
-              --   rootMarkers = { '.clang-tidy' },
-              -- },
-              {
-                -- linter
-                prefix = 'clang_format',
-                formatCommand = 'clang-format ${INPUT}',
-                formatCanRange = false,
-                formatStdin = false,
-                rootMarkers = {
-                  '.clang-format',
+                --   prefix = 'clang_tidy',
+                --   lintCommand = 'clang-tidy ${INPUT}',
+                --   lintStdin = false,
+                --   lintIgnoreExitCode = true,
+                --   lintFormats = {
+                --     '%f:%l:%c: %trror: %m',
+                --     '%f:%l:%c: %tarning: %m',
+                --     '%f:%l:%c: %tote: %m',
+                --   },
+                --   rootMarkers = { '.clang-tidy' },
+                -- },
+                {
+                  -- linter
+                  prefix = 'clang_format',
+                  formatCommand = 'clang-format ${INPUT}',
+                  formatCanRange = false,
+                  formatStdin = false,
+                  rootMarkers = {
+                    '.clang-format',
+                  },
                 },
               },
-            },
-            javascriptreact = {
-              {
-                prefix = 'eslint_d',
-                lintCommand = 'eslint_d -f visualstudio --stdin --stdin-filename ${INPUT}',
-                lintIgnoreExitCode = true,
-                lintStdin = true,
-                lintFormats = {
-                  '%f(%l,%c): %tarning %m',
-                  '%f(%l,%c): %rror %m',
+              javascriptreact = {
+                {
+                  prefix = 'eslint_d',
+                  lintCommand = 'eslint_d -f visualstudio --stdin --stdin-filename ${INPUT}',
+                  lintIgnoreExitCode = true,
+                  lintStdin = true,
+                  lintFormats = {
+                    '%f(%l,%c): %tarning %m',
+                    '%f(%l,%c): %rror %m',
+                  },
+                },
+                {
+                  -- linter
+                  prefix = 'prettier_d',
+                  formatCommand =
+                  'prettierd ${INPUT} ${--range-start=charStart} ${--range-end=charEnd} ${--tab-width=tabSize} ${--use-tabs=!insertSpaces}',
+                  formatCanRange = true,
+                  formatStdin = true,
+                  rootMarkers = {
+                    '.prettierrc',
+                    '.prettierrc.json',
+                    '.prettierrc.js',
+                    '.prettierrc.yml',
+                    '.prettierrc.yaml',
+                    '.prettierrc.json5',
+                    '.prettierrc.mjs',
+                    '.prettierrc.cjs',
+                    '.prettierrc.toml',
+                  },
                 },
               },
-              {
-                -- linter
-                prefix = 'prettier_d',
-                formatCommand = 'prettierd ${INPUT} ${--range-start=charStart} ${--range-end=charEnd} ${--tab-width=tabSize} ${--use-tabs=!insertSpaces}',
-                formatCanRange = true,
-                formatStdin = true,
-                rootMarkers = {
-                  '.prettierrc',
-                  '.prettierrc.json',
-                  '.prettierrc.js',
-                  '.prettierrc.yml',
-                  '.prettierrc.yaml',
-                  '.prettierrc.json5',
-                  '.prettierrc.mjs',
-                  '.prettierrc.cjs',
-                  '.prettierrc.toml',
+              javascript = {
+                {
+                  prefix = 'eslint_d',
+                  lintCommand = 'eslint_d -f visualstudio --stdin --stdin-filename ${INPUT}',
+                  lintIgnoreExitCode = true,
+                  lintStdin = true,
+                  lintFormats = {
+                    '%f(%l,%c): %tarning %m',
+                    '%f(%l,%c): %rror %m',
+                  },
+                },
+                {
+                  -- linter
+                  prefix = 'prettier_d',
+                  formatCommand =
+                  'prettierd ${INPUT} ${--range-start=charStart} ${--range-end=charEnd} ${--tab-width=tabSize} ${--use-tabs=!insertSpaces}',
+                  formatCanRange = true,
+                  formatStdin = true,
+                  rootMarkers = {
+                    '.prettierrc',
+                    '.prettierrc.json',
+                    '.prettierrc.js',
+                    '.prettierrc.yml',
+                    '.prettierrc.yaml',
+                    '.prettierrc.json5',
+                    '.prettierrc.mjs',
+                    '.prettierrc.cjs',
+                    '.prettierrc.toml',
+                  },
                 },
               },
-            },
-            javascript = {
-              {
-                prefix = 'eslint_d',
-                lintCommand = 'eslint_d -f visualstudio --stdin --stdin-filename ${INPUT}',
-                lintIgnoreExitCode = true,
-                lintStdin = true,
-                lintFormats = {
-                  '%f(%l,%c): %tarning %m',
-                  '%f(%l,%c): %rror %m',
+              typescript = {
+                {
+                  prefix = 'eslint_d',
+                  lintCommand = 'eslint_d -f visualstudio --stdin --stdin-filename ${INPUT}',
+                  lintIgnoreExitCode = true,
+                  lintStdin = true,
+                  lintFormats = {
+                    '%f(%l,%c): %tarning %m',
+                    '%f(%l,%c): %rror %m',
+                  },
+                },
+                {
+                  -- linter
+                  prefix = 'prettier_d',
+                  formatCommand =
+                  'prettierd ${INPUT} ${--range-start=charStart} ${--range-end=charEnd} ${--tab-width=tabSize} ${--use-tabs=!insertSpaces}',
+                  formatCanRange = true,
+                  formatStdin = true,
+                  rootMarkers = {
+                    '.prettierrc',
+                    '.prettierrc.json',
+                    '.prettierrc.js',
+                    '.prettierrc.yml',
+                    '.prettierrc.yaml',
+                    '.prettierrc.json5',
+                    '.prettierrc.mjs',
+                    '.prettierrc.cjs',
+                    '.prettierrc.toml',
+                  },
                 },
               },
-              {
-                -- linter
-                prefix = 'prettier_d',
-                formatCommand = 'prettierd ${INPUT} ${--range-start=charStart} ${--range-end=charEnd} ${--tab-width=tabSize} ${--use-tabs=!insertSpaces}',
-                formatCanRange = true,
-                formatStdin = true,
-                rootMarkers = {
-                  '.prettierrc',
-                  '.prettierrc.json',
-                  '.prettierrc.js',
-                  '.prettierrc.yml',
-                  '.prettierrc.yaml',
-                  '.prettierrc.json5',
-                  '.prettierrc.mjs',
-                  '.prettierrc.cjs',
-                  '.prettierrc.toml',
+              typescriptreact = {
+                {
+                  prefix = 'eslint_d',
+                  lintCommand = 'eslint_d -f visualstudio --stdin --stdin-filename ${INPUT}',
+                  lintIgnoreExitCode = true,
+                  lintStdin = true,
+                  lintFormats = {
+                    '%f(%l,%c): %tarning %m',
+                    '%f(%l,%c): %rror %m',
+                  },
+                },
+                {
+                  -- linter
+                  prefix = 'prettier_d',
+                  formatCommand =
+                  'prettierd ${INPUT} ${--range-start=charStart} ${--range-end=charEnd} ${--tab-width=tabSize} ${--use-tabs=!insertSpaces}',
+                  formatCanRange = true,
+                  formatStdin = true,
+                  rootMarkers = {
+                    '.prettierrc',
+                    '.prettierrc.json',
+                    '.prettierrc.js',
+                    '.prettierrc.yml',
+                    '.prettierrc.yaml',
+                    '.prettierrc.json5',
+                    '.prettierrc.mjs',
+                    '.prettierrc.cjs',
+                    '.prettierrc.toml',
+                  },
                 },
               },
-            },
-            typescript = {
-              {
-                prefix = 'eslint_d',
-                lintCommand = 'eslint_d -f visualstudio --stdin --stdin-filename ${INPUT}',
-                lintIgnoreExitCode = true,
-                lintStdin = true,
-                lintFormats = {
-                  '%f(%l,%c): %tarning %m',
-                  '%f(%l,%c): %rror %m',
+              lua = {
+                {
+                  -- formatter
+                  prefix = 'stylua',
+                  formatCommand = 'stylua --color Never ${--range-start:charStart} ${--range-end:charEnd} -',
+                  formatCanRange = true,
+                  formatStdin = true,
+                  rootMarkers = {
+                    'stylua.toml',
+                    '.stylua.toml',
+                  },
                 },
-              },
-              {
-                -- linter
-                prefix = 'prettier_d',
-                formatCommand = 'prettierd ${INPUT} ${--range-start=charStart} ${--range-end=charEnd} ${--tab-width=tabSize} ${--use-tabs=!insertSpaces}',
-                formatCanRange = true,
-                formatStdin = true,
-                rootMarkers = {
-                  '.prettierrc',
-                  '.prettierrc.json',
-                  '.prettierrc.js',
-                  '.prettierrc.yml',
-                  '.prettierrc.yaml',
-                  '.prettierrc.json5',
-                  '.prettierrc.mjs',
-                  '.prettierrc.cjs',
-                  '.prettierrc.toml',
-                },
-              },
-            },
-            typescriptreact = {
-              {
-                prefix = 'eslint_d',
-                lintCommand = 'eslint_d -f visualstudio --stdin --stdin-filename ${INPUT}',
-                lintIgnoreExitCode = true,
-                lintStdin = true,
-                lintFormats = {
-                  '%f(%l,%c): %tarning %m',
-                  '%f(%l,%c): %rror %m',
-                },
-              },
-              {
-                -- linter
-                prefix = 'prettier_d',
-                formatCommand = 'prettierd ${INPUT} ${--range-start=charStart} ${--range-end=charEnd} ${--tab-width=tabSize} ${--use-tabs=!insertSpaces}',
-                formatCanRange = true,
-                formatStdin = true,
-                rootMarkers = {
-                  '.prettierrc',
-                  '.prettierrc.json',
-                  '.prettierrc.js',
-                  '.prettierrc.yml',
-                  '.prettierrc.yaml',
-                  '.prettierrc.json5',
-                  '.prettierrc.mjs',
-                  '.prettierrc.cjs',
-                  '.prettierrc.toml',
-                },
-              },
-            },
-            lua = {
-              {
-                -- formatter
-                prefix = 'stylua',
-                formatCommand = 'stylua --color Never ${--range-start:charStart} ${--range-end:charEnd} -',
-                formatCanRange = true,
-                formatStdin = true,
-                rootMarkers = {
-                  'stylua.toml',
-                  '.stylua.toml',
-                },
-              },
-              {
-                -- linter
-                prefix = 'luacheck',
-                lintCommand = 'luacheck --codes --no-color --quiet -',
-                lintIgnoreExitCode = true,
-                lintStdin = true,
-                lintFormats = { '%.%#:%l:%c: (%t%n) %m' },
-                rootMarkers = {
-                  '.luacheckrc',
+                {
+                  -- linter
+                  prefix = 'luacheck',
+                  lintCommand = 'luacheck --codes --no-color --quiet -',
+                  lintIgnoreExitCode = true,
+                  lintStdin = true,
+                  lintFormats = { '%.%#:%l:%c: (%t%n) %m' },
+                  rootMarkers = {
+                    '.luacheckrc',
+                  },
                 },
               },
             },
           },
-        },
-        root_dir = util.root_pattern '.git',
-        single_file_support = true,
+        }
       }
-    }
     end,
   },
   {
