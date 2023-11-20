@@ -640,20 +640,29 @@ require('lazy').setup {
         single_file_support = true,
       }
 
-      lsp_config.pylyzer.setup {
+      -- lsp_config.pylyzer.setup {
+      --   on_attach = on_attach,
+      --   capabilities = capabilities,
+      --   cmd = { "pylyzer", "--server" },
+      --   filetypes = { 'python' },
+      --   single_file_support = true,
+      --   settings = {
+      --     python = {
+      --       checkOnType = false,
+      --       diagnostics = true,
+      --       inlayHints = true,
+      --       smartCompletion = true
+      --     }
+      --   }
+      -- }
+      --
+
+      lsp_config.ruff_lsp.setup {
         on_attach = on_attach,
         capabilities = capabilities,
-        cmd = { "pylyzer", "--server" },
+        cmd = { "ruff-lsp" },
         filetypes = { 'python' },
         single_file_support = true,
-        settings = {
-          python = {
-            checkOnType = false,
-            diagnostics = true,
-            inlayHints = true,
-            smartCompletion = true
-          }
-        }
       }
 
       lsp_config.efm.setup {
