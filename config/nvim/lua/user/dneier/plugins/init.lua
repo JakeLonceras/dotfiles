@@ -665,6 +665,14 @@ require('lazy').setup {
         single_file_support = true,
       }
 
+      lsp_config.intelephense.setup {
+        on_attach = on_attach,
+        capabilities = capabilities,
+        cmd = { "intelephense", "--stdio" },
+        filetypes = { 'php' },
+        root_dir = util.root_pattern("composer.json", ".git")
+      }
+
       lsp_config.efm.setup {
         root_dir = util.root_pattern '.git',
         single_file_support = true,
