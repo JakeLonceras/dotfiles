@@ -673,6 +673,25 @@ require('lazy').setup {
         root_dir = util.root_pattern("composer.json", ".git")
       }
 
+      lsp_config.solargraph.setup {
+        on_attach = on_attach,
+        capabilities = capabilities,
+        cmd = { "solargraph", "stdio" },
+        filetypes = { 'ruby' },
+        root_dir = util.root_pattern("Gemfile", ".git"),
+        init_options = {
+          formatting = true,
+        },
+        settings = {
+          {
+            solargraph = {
+              diagnostics = true,
+              completion = true,
+            }
+          }
+        }
+      }
+
       lsp_config.efm.setup {
         root_dir = util.root_pattern '.git',
         single_file_support = true,
