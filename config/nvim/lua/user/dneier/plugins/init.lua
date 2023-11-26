@@ -692,6 +692,15 @@ require('lazy').setup {
         }
       }
 
+      lsp_config.nixd.setup {
+        on_attach = on_attach,
+        capabilities = capabilities,
+        cmd = { "nixd" },
+        filetypes = { 'nix' },
+        root_dir = util.root_pattern(".nixd.json", ".git", "flake.nix"),
+        single_file_support = true
+      }
+
       lsp_config.efm.setup {
         root_dir = util.root_pattern '.git',
         single_file_support = true,
