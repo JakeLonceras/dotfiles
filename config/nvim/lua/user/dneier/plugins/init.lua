@@ -966,4 +966,10 @@ require('lazy').setup {
     end,
     config = function() end,
   },
+  {
+    'akinsho/bufferline.nvim',
+    config = function()
+      require("bufferline").setup {}
+    end
+  }
 }
