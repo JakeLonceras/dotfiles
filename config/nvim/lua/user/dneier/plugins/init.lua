@@ -178,7 +178,7 @@ require('lazy').setup {
           auto_install = false,
 
           -- List of parsers to ignore installing (or "all")
-          -- ignore_install = { "javascript" },
+          ignore_install = {},
 
           ---- If you need to change the installation directory of the parsers (see -> Advanced Setup)
           -- parser_install_dir = "/some/path/to/store/parsers", -- Remember to run vim.opt.runtimepath:append("/some/path/to/store/parsers")!
@@ -239,9 +239,6 @@ require('lazy').setup {
   },
   {
     'themaxmarchuk/tailwindcss-colors.nvim',
-  },
-  {
-    'creativenull/efmls-configs-nvim',
   },
   {
     'neovim/nvim-lspconfig',
@@ -328,14 +325,14 @@ require('lazy').setup {
   {
     'saadparwaiz1/cmp_luasnip',
   },
-  -- {
-  --   'roobert/tailwindcss-colorizer-cmp.nvim',
-  --   config = function()
-  --     require("tailwindcss-colorizer-cmp").setup({
-  --       color_square_width = 2,
-  --     })
-  --   end
-  -- },
+  {
+    'roobert/tailwindcss-colorizer-cmp.nvim',
+    config = function()
+      require('tailwindcss-colorizer-cmp').setup {
+        color_square_width = 2,
+      }
+    end,
+  },
   {
     'hrsh7th/nvim-cmp',
     config = function()
@@ -448,7 +445,9 @@ require('lazy').setup {
       }
 
       -- Set up lspconfig.
-      local capabilities = require('cmp_nvim_lsp').default_capabilities()
+      local capabilities = vim.lsp.protocol.make_client_capabilities()
+      capabilities.workspace.didChangeWatchedFiles.dynamicRegistration = false
+      capabilities = require('cmp_nvim_lsp').default_capabilities(capabilities)
 
       -- Replace <YOUR_LSP_SERVER> with each lsp server you've enabled.
 
@@ -633,34 +632,272 @@ require('lazy').setup {
         },
       }
 
-      local stylua = require 'efmls-configs.formatters.stylua'
-      local luacheck = require 'efmls-configs.linters.luacheck'
-      local languages = {
-        lua = { stylua, luacheck },
+      lsp_config.clangd.setup {
+        on_attach = on_attach,
+        capabilities = capabilities,
+        cmd = { 'clangd' },
+        filetypes = { 'c', 'cpp', 'objc', 'objcpp', 'cuda', 'proto' },
+        single_file_support = true,
       }
 
-      local efmls_config = {
-        filetypes = vim.tbl_keys(languages),
-        settings = {
-          rootMarkers = { '.git/' },
-          languages = languages,
+      -- lsp_config.pylyzer.setup {
+      --   on_attach = on_attach,
+      --   capabilities = capabilities,
+      --   cmd = { "pylyzer", "--server" },
+      --   filetypes = { 'python' },
+      --   single_file_support = true,
+      --   settings = {
+      --     python = {
+      --       checkOnType = false,
+      --       diagnostics = true,
+      --       inlayHints = true,
+      --       smartCompletion = true
+      --     }
+      --   }
+      -- }
+      --
+
+      lsp_config.ruff_lsp.setup {
+        on_attach = on_attach,
+        capabilities = capabilities,
+        cmd = { 'ruff-lsp' },
+        filetypes = { 'python' },
+        single_file_support = true,
+      }
+
+      lsp_config.intelephense.setup {
+        on_attach = on_attach,
+        capabilities = capabilities,
+        cmd = { 'intelephense', '--stdio' },
+        filetypes = { 'php' },
+        root_dir = util.root_pattern('composer.json', '.git'),
+      }
+
+      lsp_config.solargraph.setup {
+        on_attach = on_attach,
+        capabilities = capabilities,
+        cmd = { 'solargraph', 'stdio' },
+        filetypes = { 'ruby' },
+        root_dir = util.root_pattern('Gemfile', '.git'),
+        init_options = {
+          formatting = true,
         },
+        settings = {
+          {
+            solargraph = {
+              diagnostics = true,
+              completion = true,
+            },
+          },
+        },
+      }
+
+      lsp_config.nixd.setup {
+        on_attach = on_attach,
+        capabilities = capabilities,
+        cmd = { 'nixd' },
+        filetypes = { 'nix' },
+        root_dir = util.root_pattern('.nixd.json', '.git', 'flake.nix'),
+        single_file_support = true,
+      }
+
+      lsp_config.efm.setup {
+        root_dir = util.root_pattern '.git',
+        single_file_support = true,
+        on_attach = on_attach,
+        capabilities = capabilities,
         init_options = {
           documentFormatting = true,
           documentRangeFormatting = true,
+          hover = true,
+          documentSymbol = true,
+          codeAction = true,
+          completion = true,
+        },
+        cmd = { 'efm-langserver' },
+        settings = {
+          rootMarkers = { '.git/' },
+          languages = {
+            ruby = {
+              {
+                prefix = 'rubocop',
+                lintCommand = 'rubocop --lint --format emacs --stdin ${INPUT}',
+                lintStdin = true,
+                lintFormats = { '%f:%l:%c: %t: %m' },
+                rootMarkers = {},
+              },
+            },
+            -- cpp = {
+            --   {
+            --       prefix = 'clang_tidy',
+            --       lintCommand = 'clang-tidy ${INPUT}',
+            --       lintStdin = false,
+            --       lintIgnoreExitCode = true,
+            --       lintFormats = {
+            --         '%f:%l:%c: %trror: %m',
+            --         '%f:%l:%c: %tarning: %m',
+            --         '%f:%l:%c: %tote: %m',
+            --       },
+            --       rootMarkers = { '.clang-tidy' },
+            --   },
+            --   {
+            --     -- linter
+            --     prefix = 'clang_format',
+            --     formatCommand = 'clang-format ${INPUT}',
+            --     formatCanRange = false,
+            --     formatStdin = false,
+            --     rootMarkers = {
+            --       '.clang-format',
+            --     },
+            --   },
+            -- },
+            javascriptreact = {
+              {
+                prefix = 'eslint_d',
+                lintCommand = 'eslint_d -f visualstudio --stdin --stdin-filename ${INPUT}',
+                lintIgnoreExitCode = true,
+                lintStdin = true,
+                lintFormats = {
+                  '%f(%l,%c): %tarning %m',
+                  '%f(%l,%c): %rror %m',
+                },
+              },
+              {
+                -- linter
+                prefix = 'prettier_d',
+                formatCommand = 'prettierd ${INPUT} ${--range-start=charStart} ${--range-end=charEnd} ${--tab-width=tabSize} ${--use-tabs=!insertSpaces}',
+                formatCanRange = true,
+                formatStdin = true,
+                rootMarkers = {
+                  '.prettierrc',
+                  '.prettierrc.json',
+                  '.prettierrc.js',
+                  '.prettierrc.yml',
+                  '.prettierrc.yaml',
+                  '.prettierrc.json5',
+                  '.prettierrc.mjs',
+                  '.prettierrc.cjs',
+                  '.prettierrc.toml',
+                },
+              },
+            },
+            javascript = {
+              {
+                prefix = 'eslint_d',
+                lintCommand = 'eslint_d -f visualstudio --stdin --stdin-filename ${INPUT}',
+                lintIgnoreExitCode = true,
+                lintStdin = true,
+                lintFormats = {
+                  '%f(%l,%c): %tarning %m',
+                  '%f(%l,%c): %rror %m',
+                },
+              },
+              {
+                -- linter
+                prefix = 'prettier_d',
+                formatCommand = 'prettierd ${INPUT} ${--range-start=charStart} ${--range-end=charEnd} ${--tab-width=tabSize} ${--use-tabs=!insertSpaces}',
+                formatCanRange = true,
+                formatStdin = true,
+                rootMarkers = {
+                  '.prettierrc',
+                  '.prettierrc.json',
+                  '.prettierrc.js',
+                  '.prettierrc.yml',
+                  '.prettierrc.yaml',
+                  '.prettierrc.json5',
+                  '.prettierrc.mjs',
+                  '.prettierrc.cjs',
+                  '.prettierrc.toml',
+                },
+              },
+            },
+            typescript = {
+              {
+                prefix = 'eslint_d',
+                lintCommand = 'eslint_d -f visualstudio --stdin --stdin-filename ${INPUT}',
+                lintIgnoreExitCode = true,
+                lintStdin = true,
+                lintFormats = {
+                  '%f(%l,%c): %tarning %m',
+                  '%f(%l,%c): %rror %m',
+                },
+              },
+              {
+                -- linter
+                prefix = 'prettier_d',
+                formatCommand = 'prettierd ${INPUT} ${--range-start=charStart} ${--range-end=charEnd} ${--tab-width=tabSize} ${--use-tabs=!insertSpaces}',
+                formatCanRange = true,
+                formatStdin = true,
+                rootMarkers = {
+                  '.prettierrc',
+                  '.prettierrc.json',
+                  '.prettierrc.js',
+                  '.prettierrc.yml',
+                  '.prettierrc.yaml',
+                  '.prettierrc.json5',
+                  '.prettierrc.mjs',
+                  '.prettierrc.cjs',
+                  '.prettierrc.toml',
+                },
+              },
+            },
+            typescriptreact = {
+              {
+                prefix = 'eslint_d',
+                lintCommand = 'eslint_d -f visualstudio --stdin --stdin-filename ${INPUT}',
+                lintIgnoreExitCode = true,
+                lintStdin = true,
+                lintFormats = {
+                  '%f(%l,%c): %tarning %m',
+                  '%f(%l,%c): %rror %m',
+                },
+              },
+              {
+                -- linter
+                prefix = 'prettier_d',
+                formatCommand = 'prettierd ${INPUT} ${--range-start=charStart} ${--range-end=charEnd} ${--tab-width=tabSize} ${--use-tabs=!insertSpaces}',
+                formatCanRange = true,
+                formatStdin = true,
+                rootMarkers = {
+                  '.prettierrc',
+                  '.prettierrc.json',
+                  '.prettierrc.js',
+                  '.prettierrc.yml',
+                  '.prettierrc.yaml',
+                  '.prettierrc.json5',
+                  '.prettierrc.mjs',
+                  '.prettierrc.cjs',
+                  '.prettierrc.toml',
+                },
+              },
+            },
+            lua = {
+              {
+                -- formatter
+                prefix = 'stylua',
+                formatCommand = 'stylua --color Never ${--range-start:charStart} ${--range-end:charEnd} -',
+                formatCanRange = true,
+                formatStdin = true,
+                rootMarkers = {
+                  'stylua.toml',
+                  '.stylua.toml',
+                },
+              },
+              {
+                -- linter
+                prefix = 'luacheck',
+                lintCommand = 'luacheck --codes --no-color --quiet -',
+                lintIgnoreExitCode = true,
+                lintStdin = true,
+                lintFormats = { '%.%#:%l:%c: (%t%n) %m' },
+                rootMarkers = {
+                  '.luacheckrc',
+                },
+              },
+            },
+          },
         },
       }
-
-      require('lspconfig').efm.setup(vim.tbl_extend('force', efmls_config, {
-        -- Pass your custom lsp config below like on_attach and capabilities
-        --
-        -- on_attach = on_attach,
-        capabilities = capabilities,
-      }))
-
-      -- require('lspconfig')['efm'].setup {
-      --   capabilities = capabilities
-      -- }
     end,
   },
   {
@@ -713,6 +950,21 @@ require('lazy').setup {
     'norcalli/nvim-colorizer.lua',
     config = function()
       require('colorizer').setup()
+    end,
+  },
+  {
+    'iamcco/markdown-preview.nvim',
+    cmd = { 'MarkdownPreviewToggle', 'MarkdownPreview', 'MarkdownPreviewStop' },
+    ft = { 'markdown' },
+    build = function()
+      vim.fn['mkdp#util#install']()
+    end,
+    config = function() end,
+  },
+  {
+    'akinsho/bufferline.nvim',
+    config = function()
+      require('bufferline').setup {}
     end,
   },
 }
